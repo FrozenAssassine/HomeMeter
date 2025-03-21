@@ -1,6 +1,7 @@
 import { loadPowerData, PowerData } from "@/backend/powerDataParser";
 import { DailySolarData, getAllSolarItems, loadAllData, loadData, SolarData } from "@/backend/solarDataParser";
 import { createContext, useContext, useEffect, useState } from "react";
+import { Alert } from "react-native";
 
 interface DataContextType {
     liveSolarData: SolarData | null;
@@ -30,7 +31,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const power = await loadPowerData();
             setLivePowerData(power);
         } catch (error) {
-            console.error("Error loading solar data:", error);
+            alert("No Internet connection");
         }
     };
 
