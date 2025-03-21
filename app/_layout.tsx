@@ -1,39 +1,51 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { Stack } from "expo-router";
+import { useColorScheme } from "react-native";
+import * as StatusBar from "expo-status-bar";
+import * as NavigationBar from "expo-navigation-bar";
+import { darkTheme, lightTheme } from "@/assets/colors/colors";
+import { useEffect } from "react";
+import { ThemeProvider } from "@/contexts/themeContext";
+import { DataProvider, useData } from "@/contexts/dataProvider";
+import * as Notifications from "expo-notifications";
+import { scheduleNotification } from "@/backend/scheduleNotification";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+    }),
+});
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+    const colorScheme = useColorScheme();
+    const background = colorScheme == "light" ? lightTheme.background : darkTheme.background;
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    async function requestPermissions() {
+        const { status } = await Notifications.requestPermissionsAsync();
+        if (status !== "granted") {
+            alert("Permission to send notifications was denied");
+        }
     }
-  }, [loaded]);
+    useEffect(() => {
+        NavigationBar.setBackgroundColorAsync(background);
+        StatusBar.setStatusBarBackgroundColor(background);
+    }, [colorScheme]);
 
-  if (!loaded) {
-    return null;
-  }
+    useEffect(() => {
+        requestPermissions();
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+        scheduleNotification();
+    }, []);
+
+    return (
+        <ThemeProvider>
+            <DataProvider>
+                <Stack>
+                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                    <Stack.Screen name="+not-found" />
+                </Stack>
+            </DataProvider>
+        </ThemeProvider>
+    );
 }
