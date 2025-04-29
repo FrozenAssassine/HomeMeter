@@ -75,6 +75,13 @@ export default function TabLayout() {
                         tabBarIcon: ({ focused }) => makeTabIcon(focused, "power-outline", "power"),
                     }}
                 />
+                <Tabs.Screen
+                    name="charts"
+                    options={{
+                        title: "",
+                        tabBarIcon: ({ focused }) => makeTabIcon(focused, "bar-chart-outline", "bar-chart"),
+                    }}
+                />
             </Tabs>
         </View>
     );
