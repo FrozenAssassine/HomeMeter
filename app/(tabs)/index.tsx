@@ -30,7 +30,8 @@ export default function SolarOverview() {
                         (data.livePowerData?.total_power ?? 0 < 0 ? -1 * (data.livePowerData?.total_power ?? 0) : "0") +
                         "W"
                     }
-                    showGridFlow={(data.livePowerData?.total_power ?? 0) < 0}
+                    useSolarPower={(data.liveSolarData?.total.Power.v ?? 0) > 0}
+                    useGridPower={(data.livePowerData?.total_power ?? 0) > 0}
                 />
                 <View style={{ marginTop: 40 }} />
                 <SectionHeadline text="Solar" />

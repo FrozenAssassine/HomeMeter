@@ -13,7 +13,8 @@ interface HomePageDataOverviewProps {
     bottomTitle: string;
     bottomIcon: React.ComponentProps<typeof Ionicons>["name"];
     lineText: string;
-    showGridFlow: Boolean;
+    useSolarPower: Boolean;
+    useGridPower: Boolean;
 }
 
 export default function HomePageDataOverview({
@@ -24,7 +25,8 @@ export default function HomePageDataOverview({
     bottomTitle,
     bottomIcon,
     lineText,
-    showGridFlow,
+    useGridPower,
+    useSolarPower,
 }: HomePageDataOverviewProps) {
     const colors = useColors();
 
@@ -77,21 +79,21 @@ export default function HomePageDataOverview({
                     d={`M${leftPos.x} ${leftPos.y + 25} v60 a10 10 0 0 0 10 10 h${bottomPos.x - (leftPos.x + 75)}`}
                     strokeWidth="2"
                     fill="none"
-                    stroke={!showGridFlow ? colors.accent2 : colors.text}
-                    strokeDasharray={showGridFlow ? "" : "5,5"}
+                    stroke={useSolarPower ? colors.text : colors.accent2}
+                    strokeDasharray={useSolarPower ? "" : "5,5"}
                 />
 
                 {/* Line from Right */}
                 <Path
                     d={`M${rightPos.x} ${rightPos.y + 25} v60 a10 10 0 0 1 -10 10 h${bottomPos.x - (rightPos.x - 75)}`}
-                    stroke={showGridFlow ? colors.accent2 : colors.text}
-                    strokeDasharray={!showGridFlow ? "" : "5,5"}
+                    stroke={useGridPower ? colors.text : colors.accent2}
+                    strokeDasharray={useGridPower ? "" : "5,5"}
                     strokeWidth="2"
                     fill="none"
                 />
 
                 {/* Line from Top Left to Top Right */}
-                {showGridFlow && (
+                {!useGridPower && (
                     <Path
                         d={`M${leftPos.x + 80} ${leftPos.y} H${rightPos.x - 70}`}
                         stroke={colors.text}
@@ -100,7 +102,7 @@ export default function HomePageDataOverview({
                     />
                 )}
                 {/* Arrow at the center of the horizontal line */}
-                {showGridFlow && (
+                {!useGridPower && (
                     <Polygon
                         points={`${arrowX},${leftPos.y + 10} ${arrowX + 10},${leftPos.y} ${arrowX},${leftPos.y - 10}`}
                         fill={colors.text}
@@ -109,7 +111,7 @@ export default function HomePageDataOverview({
             </Svg>
 
             {/* Text Above the Top Line */}
-            {showGridFlow && (
+            {!useGridPower && (
                 <View
                     style={{
                         position: "absolute",

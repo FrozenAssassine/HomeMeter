@@ -15,7 +15,7 @@ interface PowerData {
 
 async function loadPowerData(): Promise<PowerData | null> {
     const jsonData = await fetch("https://solar.frozenassassine.de/data/livepower.json").then((res) => res.json());
-    return jsonData;
+    return jsonData as PowerData;
 }
 
 export { loadPowerData };
