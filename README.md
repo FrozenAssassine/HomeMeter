@@ -1,50 +1,45 @@
-# Welcome to your Expo app 👋
+# Home Meter
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+☀️ Monitor of our home power usage and solar data all combined into one app.
 
-## Get started
 
-1. Install dependencies
+### ✨ Features
 
-   ```bash
-   npm install
-   ```
+- 🔋 Real-time display of house power usage
+- ☀️ Live solar power generation updates
+- 📈 Daily solar production history
+- 🏠 Overview of total home power consumption
+- 📊 Interactive graphs for usage and production
+- 📅 Tabular history view for detailed analysis
+- ⚡ Easy-to-read metrics and dynamic updates
 
-2. Start the app
+### 📷 Screenshots
+<div>
+   
+<img height="500" src="Images/Image01.png" alt="Home screen"/>
+<img height="500" src="Images/Image02.png" alt="Live solar Data"/>
+<img height="500" src="Images/Image03.png" alt="History Table"/>
+<img height="500" src="Images/Image04.png" alt="Live power usage"/>
+<img height="500" src="Images/Image05.png" alt="History charts"/>
+</div>
 
-   ```bash
-    npx expo start
-   ```
+You can use the app as starting point, but it needs adaption for every usecase. 
+Especially the way I get the data is a little more complex.
 
-In the output, you'll find options to open the app in a
+The alldata.txt looks the following:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+Date|Total kWh|Daily Wh|Peak Wh|Peak Wh Time|Peak Temperature|Peak Temperature Time
+```
+19.03.2023|28.77|2187|871.4|11:07:15|46.3|14:22:01
+20.03.2023|30.30|1533|232.0|20:47:33|25.4|20:47:33
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+I use a python script to read the OpenDTU api and collect the daily data like peak and temp peak. I upload the data to my server.
+The python script also uploads the live data from OpenDTU and sends it to the server too.
+Another python script handles the power consumption from our Shelly 3EM, the data is also send to my server. 
 
-## Learn more
+After that I just parse the data with this app and show it to the user.
+The data from shelly and the api data from OpenDTU, follow the original format and I have not modified it.
 
-To learn more about developing your project with Expo, look at the following resources:
+You can simply add your own server address into the app, to show your own solar data.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
