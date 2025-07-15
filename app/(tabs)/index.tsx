@@ -1,4 +1,5 @@
 import HomePageDataOverview from "@/components/homePageDataOverview";
+import IndividualCellDisplay from "@/components/individualCellDisplay";
 import SectionHeadline from "@/components/sectionHeadline";
 import SimplePage from "@/components/simplePage";
 import SingleValueBox from "@/components/singleValueBox";
@@ -55,6 +56,10 @@ export default function SolarOverview() {
                         (data.solarHistoryData[data.solarHistoryData.length - 1]?.HighestWatt.toFixed(1) ?? "") + "W"
                     }
                 />
+
+                <View style={{ marginTop: 40 }} />
+                <SectionHeadline text="Ertrag Zellen" />
+                <IndividualCellDisplay />
                 {/* <SectionHeadline text="Verbrauch" />
                 <SingleValueBox
                     headline="Hausverbrauch"
