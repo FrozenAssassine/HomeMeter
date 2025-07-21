@@ -76,7 +76,7 @@ export default function SolarTable() {
                             gap: 5,
                         }}
                     >
-                        <SimpleText style={{ fontSize: 24, fontWeight: "bold" }}>Ertrag am {modalItem.Date}</SimpleText>
+                        <SimpleText style={{ fontSize: 24, fontWeight: "bold" }}>Daten vom {modalItem.Date}</SimpleText>
                         <SingleValueBox
                             fontStyle={{ fontSize: 18 }}
                             headline="Ertrag"
@@ -95,9 +95,42 @@ export default function SolarTable() {
                         <View
                             style={{ borderBottomWidth: 2, borderBottomColor: "gray", width: "100%", marginTop: 10 }}
                         />
-                        <SimpleText style={{ fontSize: 22, fontWeight: "bold" }}>
-                            Gesamt Ertrag {modalItem.YieldTotal.toFixed(1)} kWh
-                        </SimpleText>
+
+                        {modalItem.ConsumedWH && (
+                            <SingleValueBox
+                                fontStyle={{ fontSize: 18 }}
+                                headline={"Hausverbrauch"}
+                                value={modalItem.ConsumedWH.toFixed(0) + " Wh"}
+                            />
+                        )}
+                        {modalItem.ExportedWH && (
+                            <SingleValueBox
+                                fontStyle={{ fontSize: 18 }}
+                                headline={"Netzeinspeisung"}
+                                value={modalItem.ExportedWH.toFixed(0) + " Wh"}
+                            />
+                        )}
+                        {modalItem.SelfUsedWH && (
+                            <SingleValueBox
+                                fontStyle={{ fontSize: 18 }}
+                                headline={"Umgesetzter Solarstrom"}
+                                value={modalItem.SelfUsedWH.toFixed(0) + " Wh"}
+                            />
+                        )}
+                        {modalItem.SelfConsumptionRatio && (
+                            <SingleValueBox
+                                fontStyle={{ fontSize: 18 }}
+                                headline={"Eigenverbrauchsquote"}
+                                value={(modalItem.SelfConsumptionRatio * 100).toFixed(0) + " %"}
+                            />
+                        )}
+                        {modalItem.AutarkyRatio && (
+                            <SingleValueBox
+                                fontStyle={{ fontSize: 18 }}
+                                headline={"Autarkiegrad"}
+                                value={(modalItem.AutarkyRatio * 100).toFixed(0) + " %"}
+                            />
+                        )}
                     </View>
                 )}
             </SimpleModalBottomFlyout>

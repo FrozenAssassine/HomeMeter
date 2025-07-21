@@ -11,6 +11,8 @@ import { View } from "react-native";
 export default function SolarOverview() {
     const data = useData();
 
+    const historyData = data.solarHistoryData[data.solarHistoryData.length - 1];
+
     return (
         <SimplePage headline="Übersicht" enableScroll={true}>
             <VerticalView style={{ gap: 10, alignItems: "center", justifyContent: "center" }}>
@@ -34,9 +36,10 @@ export default function SolarOverview() {
                     useSolarPower={(data.liveSolarData?.total.Power.v ?? 0) > 0}
                     useGridPower={(data.livePowerData?.total_power ?? 0) > 0}
                 />
-                <View style={{ marginTop: 40 }} />
-                <SectionHeadline text="Solar" />
+                <View style={{ marginTop: 10 }} />
+                <SectionHeadline text="Allgemein" />
                 <SingleValueBox
+                    height={30}
                     headline="Ertrag Heute"
                     value={
                         (data.liveSolarData?.total.YieldDay.v.toFixed(0) ?? "") + data.liveSolarData?.total.YieldDay.u
@@ -44,20 +47,53 @@ export default function SolarOverview() {
                 />
 
                 <SingleValueBox
+                    height={30}
                     headline="Gesamtertrag"
                     value={
                         (data.liveSolarData?.total.YieldTotal.v.toFixed(1) ?? "") +
                         data.liveSolarData?.total.YieldTotal.u
                     }
                 />
-                <SingleValueBox
-                    headline="Peak"
-                    value={
-                        (data.solarHistoryData[data.solarHistoryData.length - 1]?.HighestWatt.toFixed(1) ?? "") + "W"
-                    }
-                />
+                <SingleValueBox height={30} headline="Peak" value={(historyData?.HighestWatt.toFixed(1) ?? "") + "W"} />
 
-                <View style={{ marginTop: 40 }} />
+                <View style={{ marginTop: 10 }} />
+                {historyData?.ConsumedWH && (
+                    <SingleValueBox
+                        height={30}
+                        headline={"Hausverbrauch"}
+                        value={historyData.ConsumedWH.toFixed(0) + " Wh"}
+                    />
+                )}
+                {historyData?.ExportedWH && (
+                    <SingleValueBox
+                        height={30}
+                        headline={"Netzeinspeisung"}
+                        value={historyData.ExportedWH.toFixed(0) + " Wh"}
+                    />
+                )}
+                {historyData?.SelfUsedWH && (
+                    <SingleValueBox
+                        height={30}
+                        headline={"Umgesetzter Solarstrom"}
+                        value={historyData.SelfUsedWH.toFixed(0) + " Wh"}
+                    />
+                )}
+                {historyData?.SelfConsumptionRatio && (
+                    <SingleValueBox
+                        height={30}
+                        headline={"Eigenverbrauchsquote"}
+                        value={(historyData.SelfConsumptionRatio * 100).toFixed(0) + " %"}
+                    />
+                )}
+                {historyData?.AutarkyRatio && (
+                    <SingleValueBox
+                        height={30}
+                        headline={"Autarkiegrad"}
+                        value={(historyData.AutarkyRatio * 100).toFixed(0) + " %"}
+                    />
+                )}
+
+                <View style={{ marginTop: 10 }} />
                 <SectionHeadline text="Ertrag Zellen" />
                 <IndividualCellDisplay />
                 {/* <SectionHeadline text="Verbrauch" />

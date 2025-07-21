@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import Modal from "react-native-modal";
-import { StyleSheet, useColorScheme, View } from "react-native";
+import { ScrollView, StyleSheet, useColorScheme, View } from "react-native";
 import { useTheme } from "@/contexts/themeContext";
 
 type Props = {
@@ -22,8 +22,20 @@ export default function SimpleModalBottomFlyout({ children, isVisible, dismissed
             onBackdropPress={() => backPressed()}
             isVisible={isVisible}
             style={styles.modal}
+            animationIn={"fadeIn"}
+            animationOut={"fadeOut"}
+            backdropTransitionOutTiming={1}
+            hideModalContentWhileAnimating
         >
-            <View style={[styles.modalContent, { backgroundColor: colors.background }]}>{children}</View>
+            <View style={[styles.contentWrapper, { backgroundColor: colors.background }]}>
+                <ScrollView
+                    scrollEnabled={true}
+                    contentContainerStyle={styles.scrollContainer}
+                    style={styles.scrollView}
+                >
+                    {children}
+                </ScrollView>
+            </View>
         </Modal>
     );
 }
@@ -32,15 +44,21 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end",
         margin: 0,
         backgroundColor: "transparent",
-        height: "50%",
     },
-    modalContent: {
-        height: "40%",
+    contentWrapper: {
+        maxHeight: "70%",
+        minHeight: "25%",
         width: "100%",
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
+        overflow: "hidden", // Ensures no overflow glitches
+    },
+    scrollView: {
+        flexGrow: 0, // Important: prevent ScrollView from expanding unnecessarily
+    },
+    scrollContainer: {
         padding: 20,
         alignItems: "center",
-        justifyContent: "space-around",
+        justifyContent: "flex-start",
     },
 });

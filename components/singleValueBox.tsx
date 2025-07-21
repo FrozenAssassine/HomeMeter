@@ -11,6 +11,7 @@ interface SingleValueBoxProps {
     fontStyle?: TextStyle;
     accent?: boolean;
     boxColor?: string;
+    height?: number;
 }
 
 const SingleValueBox: React.FC<SingleValueBoxProps> = ({
@@ -20,6 +21,7 @@ const SingleValueBox: React.FC<SingleValueBoxProps> = ({
     value,
     headline,
     selectable,
+    height = 40,
 }) => {
     const colors = useColors();
     return (
@@ -31,6 +33,8 @@ const SingleValueBox: React.FC<SingleValueBoxProps> = ({
                 flexDirection: "row",
                 alignItems: "center",
                 backgroundColor: boxColor ?? "transparent",
+                height: height,
+                padding: 0,
             }}
         >
             <SimpleText style={{ color: accent ? colors.text : colors.accent, fontWeight: "bold" }} fontsize={18}>
@@ -42,7 +46,6 @@ const SingleValueBox: React.FC<SingleValueBoxProps> = ({
                 style={[
                     {
                         fontWeight: "900",
-                        marginTop: 5,
                     },
                     fontStyle,
                 ]}

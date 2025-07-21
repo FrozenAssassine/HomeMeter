@@ -6,7 +6,12 @@ class DailySolarData {
         public HighestWatt: number,
         public TimeHighestWatt: string,
         public Temperature: number,
-        public TimeHighestTemp: string
+        public TimeHighestTemp: string,
+        public SelfUsedWH?: number,
+        public ExportedWH?: number,
+        public ConsumedWH?: number,
+        public SelfConsumptionRatio?: number,
+        public AutarkyRatio?: number
     ) {}
 }
 
@@ -87,7 +92,6 @@ function getAllSolarItems(data: string): { items: DailySolarData[] } {
 
     for (let i = 0; i < lines.length; i++) {
         let separated = lines[i].split("|");
-        if (separated.length !== 7) continue;
 
         var item = new DailySolarData(
             separated[0],
@@ -96,7 +100,12 @@ function getAllSolarItems(data: string): { items: DailySolarData[] } {
             parseFloat(separated[3]),
             separated[4],
             parseFloat(separated[5]),
-            separated[6]
+            separated[6],
+            separated.length == 12 ? parseFloat(separated[7]) : undefined,
+            separated.length == 12 ? parseFloat(separated[8]) : undefined,
+            separated.length == 12 ? parseFloat(separated[9]) : undefined,
+            separated.length == 12 ? parseFloat(separated[10]) : undefined,
+            separated.length == 12 ? parseFloat(separated[11]) : undefined
         );
         items.push(item);
     }
