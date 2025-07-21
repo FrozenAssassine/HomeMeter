@@ -1,7 +1,7 @@
 import { loadPowerData, PowerData } from "@/backend/powerDataParser";
 import { DailySolarData, getAllSolarItems, loadAllData, loadData, SolarData } from "@/backend/solarDataParser";
 import { createContext, useContext, useEffect, useState } from "react";
-import { Alert } from "react-native";
+import { io } from "socket.io-client";
 
 interface DataContextType {
     liveSolarData: SolarData | null;
@@ -12,38 +12,56 @@ interface DataContextType {
 
 const DataProviderContext = createContext<DataContextType | undefined>(undefined);
 
+const socket = io("https://solar.frozenassassine.de", {
+    path: "/dataSocket",
+    transports: ["websocket"],
+});
+
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [liveSolarData, setLiveSolarData] = useState<SolarData | null>(null);
     const [solarHistoryData, setSolarHistoryData] = useState<DailySolarData[]>([]);
     const [livePowerData, setLivePowerData] = useState<PowerData | null>(null);
 
     const fetchData = async () => {
-        try {
-            const data = await loadData();
+        await loadAllData().then((data: string) => {
+            let res = getAllSolarItems(data);
+            const items = res.items;
+            setSolarHistoryData(items);
+        });
+
+        await loadData().then((data) => {
             setLiveSolarData(data);
+        });
 
-            const allDataString = await loadAllData();
-            const { items } = getAllSolarItems(allDataString);
-            if (items.length > 0) {
-                setSolarHistoryData(items);
-            }
-
-            const power = await loadPowerData();
-            setLivePowerData(power);
-        } catch (error) {
-            alert("No Internet connection");
-        }
+        await loadPowerData().then((data) => setLivePowerData(data));
     };
 
     useEffect(() => {
+        socket.on("liveData", (data) => {
+            setLiveSolarData(data);
+        });
+
+        socket.on("historyData", (data) => {
+            let res = getAllSolarItems(data);
+            const items = res.items;
+            if (items.length > 0) {
+                setSolarHistoryData(items);
+            }
+        });
+
+        socket.on("powerData", (data) => {
+            setLivePowerData(JSON.parse(data));
+        });
+
         fetchData();
 
-        const interval = setInterval(() => {
-            fetchData();
-        }, 10000);
-
-        return () => clearInterval(interval);
+        return () => {
+            socket.off("liveData");
+            socket.off("historyData");
+            socket.off("powerData");
+        };
     }, []);
+
     return (
         <DataProviderContext.Provider
             value={{
