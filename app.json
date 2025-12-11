@@ -2,7 +2,7 @@
   "expo": {
     "name": "Home Meter",
     "slug": "Home-Meter",
-    "version": "1.4.1",
+    "version": "1.4.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -45,7 +45,7 @@
         }
       ],
       [
-      "expo-build-properties",
+        "expo-build-properties",
         {
           "android": {
             "compileSdkVersion": 35,
